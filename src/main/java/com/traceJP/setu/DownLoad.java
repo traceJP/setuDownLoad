@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class DownLoad {
+public class DownLoad implements Runnable {
 
     private final String rootFile = Util.getProperties("localUrl");
 
@@ -18,10 +18,15 @@ public class DownLoad {
         this.fileName = fileName;
     }
 
+    @Override
+    public void run() {
+        load();
+    }
+
     /**
      * 下载
      */
-    public void load() {
+    private void load() {
         try {
             URL imgFile = new URL(url);
             HttpURLConnection urlConnection = (HttpURLConnection)imgFile.openConnection();
@@ -53,7 +58,9 @@ public class DownLoad {
             while ((len = stream.read(buffer, 0, 1024)) != -1) {
                 output.write(buffer, 0, len);
             }
+            System.out.println("一份涩图已经下载成功 ---> " + fileName);
         } catch (Exception e) {
+            System.out.println("下载出现未知错误");
             e.printStackTrace();
         } finally {
             try {
